@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Big Bang Theory - Official Fan Website</title>
+    <meta name="description" content="The ultimate fan destination for The Big Bang Theory. Explore episodes, iconic moments, cast details, and behind-the-scenes trivia.">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="stars-bg"></div>
+    
+    <!-- Navigation (Injected via JS) -->
+    <div id="nav-placeholder"></div>
+
+    <!-- Hero Section -->
+    <header class="hero">
+        <div class="hero-bg" id="main-hero-bg" style="background-image: url('images/hero-banner.jpg'); opacity: 0.4;"></div>
+        <div class="hero-content">
+            <div class="hero-tagline reveal">Our whole universe was in a hot, dense state...</div>
+            <h1 class="hero-title reveal reveal-delay-1">The Big Bang Theory</h1>
+            <p class="hero-description reveal reveal-delay-2">
+                Welcome to the ultimate fan destination celebrating 12 seasons of friendship, 
+                science, and laughter that changed television forever.
+            </p>
+            <div class="reveal reveal-delay-3">
+                <a href="#explore" class="btn btn-primary" onclick="scrollToSection('explore'); return false;">
+                    Start Exploring
+                </a>
+            </div>
+            
+            <div class="hero-stats reveal reveal-delay-4">
+                <div class="hero-stat">
+                    <span class="hero-stat-number count-up" data-count="12">0</span>
+                    <span class="hero-stat-label">Seasons</span>
+                </div>
+                <div class="hero-stat">
+                    <span class="hero-stat-number count-up" data-count="279">0</span>
+                    <span class="hero-stat-label">Episodes</span>
+                </div>
+                <div class="hero-stat">
+                    <span class="hero-stat-number count-up" data-count="10">0</span>
+                    <span class="hero-stat-label">Emmys</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Explore Section -->
+    <section id="explore" class="section section-dark">
+        <div class="container">
+            <div class="section-header reveal">
+                <h2 class="section-title">Explore the <span class="highlight">Universe</span></h2>
+                <p class="section-subtitle">Dive deep into everything that makes The Big Bang Theory unforgettable.</p>
+            </div>
+
+            <div class="grid grid-2">
+                <a href="episodes.html" class="card reveal">
+                    <h3 class="font-heading" style="font-size: 1.5rem; margin-bottom: 0.5rem; color: var(--accent-cyan);">Episodes Guide</h3>
+                    <p class="text-secondary">Explore all 279 episodes across 12 seasons. Find your favorites, read trivia, and check IMDb ratings.</p>
+                </a>
+                
+                <a href="cast.html" class="card reveal reveal-delay-1">
+                    <h3 class="font-heading" style="font-size: 1.5rem; margin-bottom: 0.5rem; color: var(--accent-purple);">Cast & Crew</h3>
+                    <p class="text-secondary">Meet the brilliant minds in front of and behind the camera who brought this world to life.</p>
+                </a>
+                
+                <a href="moments.html" class="card reveal reveal-delay-2">
+                    <h3 class="font-heading" style="font-size: 1.5rem; margin-bottom: 0.5rem; color: var(--accent-gold);">Iconic Moments</h3>
+                    <p class="text-secondary">Relive the laughter, the tears, and the bazingas. Watch the scenes that defined the show.</p>
+                </a>
+                
+                <a href="behind-the-scenes.html" class="card reveal reveal-delay-3">
+                    <h3 class="font-heading" style="font-size: 1.5rem; margin-bottom: 0.5rem; color: var(--accent-pink);">Behind the Scenes</h3>
+                    <p class="text-secondary">Discover fascinating trivia, production secrets, and Easter eggs you might have missed.</p>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Cast Section (Dynamically Loaded) -->
+    <section class="section section-glass">
+        <div class="container">
+            <div class="section-header reveal">
+                <h2 class="section-title">Meet the <span class="highlight">Cast</span></h2>
+                <p class="section-subtitle">The brilliant minds behind the laughs.</p>
+            </div>
+            
+            <div id="home-cast-gallery" class="grid grid-auto-fit reveal">
+                <!-- Cast images loaded via TVMaze API -->
+            </div>
+            
+            <div class="text-center reveal" style="margin-top: 2rem;">
+                <a href="cast.html" class="btn btn-secondary">View Full Cast & Crew</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quote Section -->
+    <section class="section section-glass">
+        <div class="container container-narrow">
+            <div class="quote-block reveal">
+                <p class="quote-text">"I have been encouraged, sustained, and inspired by my remarkable friends. I truly am the luckiest man alive."</p>
+                <div class="quote-author">— Sheldon Cooper (Nobel Prize Speech)</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer (Injected via JS) -->
+    <div id="footer-placeholder"></div>
+
+    <div class="back-to-top">↑</div>
+
+    <!-- Scripts -->
+    <script src="js/data.js"></script>
+    <script src="js/script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('nav-placeholder').innerHTML = getNavHTML('home');
+            document.getElementById('footer-placeholder').innerHTML = getFooterHTML();
+            initNavigation();
+            initCountUp();
+
+            // Fetch official show image from TVMaze
+            fetch('https://api.tvmaze.com/shows/66')
+                .then(res => res.json())
+                .then(data => {
+                    if(data && data.image && data.image.original) {
+                        const heroBg = document.getElementById('main-hero-bg');
+                        heroBg.style.backgroundImage = `url('${data.image.original}')`;
+                        heroBg.style.backgroundPosition = 'center top';
+                    }
+                })
+                .catch(err => console.error('Error fetching TVMaze image:', err));
+
+            // Fetch official cast images for home page
+            fetch('https://api.tvmaze.com/shows/66/cast')
+                .then(res => res.json())
+                .then(data => {
+                    const gallery = document.getElementById('home-cast-gallery');
+                    // Display top 7 main cast members
+                    const mainCastNames = ["Sheldon Cooper", "Leonard Hofstadter", "Penny", "Howard Wolowitz", "Rajesh Koothrappali", "Bernadette Rostenkowski-Wolowitz", "Amy Farrah Fowler"];
+                    
+                    const filteredCast = data.filter(c => mainCastNames.some(name => c.character.name.includes(name))).slice(0, 7);
+                    
+                    filteredCast.forEach(c => {
+                        if (c.person.image && c.person.image.medium) {
+                            const html = `
+                                <div class="card" style="padding: 0; overflow: hidden; border-radius: var(--radius-lg); text-align: center;">
+                                    <div style="height: 300px; background-image: url('${c.person.image.original || c.person.image.medium}'); background-size: cover; background-position: center top;"></div>
+                                    <div style="padding: 1rem; background: rgba(0,0,0,0.4);">
+                                        <h3 style="font-family: var(--font-heading); margin-bottom: 0.2rem; font-size: 1.1rem;">${c.character.name.split(' ')[0]}</h3>
+                                        <p style="color: var(--text-muted); font-size: 0.8rem;">${c.person.name}</p>
+                                    </div>
+                                </div>
+                            `;
+                            gallery.insertAdjacentHTML('beforeend', html);
+                        }
+                    });
+                })
+                .catch(err => console.error('Error fetching TVMaze cast:', err));
+        });
+    </script>
+</body>
+</html>

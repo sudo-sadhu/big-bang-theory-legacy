@@ -145,12 +145,15 @@
                     
                     filteredCast.forEach(c => {
                         if (c.person.image && c.person.image.medium) {
+                            const characterName = c.character.name.split(' ')[0];
+                            const actorName = c.person.name;
+                            const imgUrl = c.person.image.original || c.person.image.medium;
                             const html = `
                                 <div class="card" style="padding: 0; overflow: hidden; border-radius: var(--radius-lg); text-align: center;">
-                                    <div style="height: 300px; background-image: url('${c.person.image.original || c.person.image.medium}'); background-size: cover; background-position: center top;"></div>
+                                    <div style="height: 300px; background-image: url('${escapeHTML(imgUrl)}'); background-size: cover; background-position: center top;"></div>
                                     <div style="padding: 1rem; background: rgba(0,0,0,0.4);">
-                                        <h3 style="font-family: var(--font-heading); margin-bottom: 0.2rem; font-size: 1.1rem;">${c.character.name.split(' ')[0]}</h3>
-                                        <p style="color: var(--text-muted); font-size: 0.8rem;">${c.person.name}</p>
+                                        <h3 style="font-family: var(--font-heading); margin-bottom: 0.2rem; font-size: 1.1rem;">${escapeHTML(characterName)}</h3>
+                                        <p style="color: var(--text-muted); font-size: 0.8rem;">${escapeHTML(actorName)}</p>
                                     </div>
                                 </div>
                             `;
